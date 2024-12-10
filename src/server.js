@@ -5,6 +5,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 require("dotenv").config();
 
+// Test route to verify server is working
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'Server is working' });
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../dist")));
@@ -70,11 +75,13 @@ app.post("/generate-tweets", validateApiKey, async (req, res) => {
     }
 });
 
-// Catch-all route
+// Catch-all route - must be last
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
+// Start server with logging
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
+    console.log('OpenAI Key exists:', !!process.env.OPENAI_API_KEY);
 });
